@@ -21,27 +21,23 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder
 import uk.gov.hmrc.performance.conf.ServicesConfiguration
 
-object ExampleRequests extends ServicesConfiguration {
+object CheckRequests extends ServicesConfiguration {
 
-  val baseUrl: String = baseUrlFor("example-frontend")
-  val route: String   = "/check-your-vat-flat-rate"
+  val baseUrl: String = baseUrlFor("rate-limited-allow-list")
+  val route: String   = "/rate-limited-allow-list"
 
-  val navigateToHomePage: HttpRequestBuilder =
+  val checkUserIdentifierNewUsers: HttpRequestBuilder =
     http("Navigate to Home Page")
-      .get(s"$baseUrl$route/vat-return-period")
+      .post(s"$baseUrl$route/services/rate-limited-allow-list-performance-tests/features/performance-tests")
+      .asJson
+      .body(StringBody("""{ "identifier": "#{randomIdentifier}" } """))
       .check(status.is(200))
-      .check(css("input[name=csrfToken]", "value").saveAs("csrfToken"))
 
-  val postVatReturnPeriod: HttpRequestBuilder =
-    http("Post VAT return Period")
-      .post(s"$baseUrl$route/vat-return-period": String)
-      .formParam("vatReturnPeriod", s"#{vatReturnPeriod}")
-      .formParam("csrfToken", s"#{csrfToken}")
-      .check(status.is(303))
-      .check(header("Location").is("/check-your-vat-flat-rate/turnover").saveAs("turnOverPage"))
-
-  val getTurnoverPage: HttpRequestBuilder =
-    http("Get Turnover Page")
-      .get(s"$baseUrl#{turnOverPage}": String)
+  val checkUserIdentifierReturningUsers: HttpRequestBuilder =
+    http("Navigate to Home Page")
+      .post(s"$baseUrl$route/services/rate-limited-allow-list-performance-tests/features/performance-tests")
+      .asJson
+      .body(StringBody("""{ "identifier": "#{repeatIdentifier}" } """))
       .check(status.is(200))
+
 }
