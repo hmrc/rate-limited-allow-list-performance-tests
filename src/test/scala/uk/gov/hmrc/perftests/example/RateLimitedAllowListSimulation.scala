@@ -40,13 +40,53 @@ class RateLimitedAllowListSimulation extends PerformanceTestRunner {
   )
 
   setup(
-    "check-user-identifier",
+    "check-user-identifier-service1",
     "Check if a user is on or can be added to the allow list"
   )
     .withActions(feed(identifierFeeder).actionBuilders: _*)
     .withRequests(
-      checkUserIdentifierNewUsers,
-      checkUserIdentifierReturningUsers
+      Service1.checkUserIdentifierNewUsers,
+      Service1.checkUserIdentifierReturningUsers,
+    )
+
+  setup(
+    "check-user-identifier-service2",
+    "Check if a user is on or can be added to the allow list"
+  )
+    .withActions(feed(identifierFeeder).actionBuilders: _*)
+    .withRequests(
+      Service2.checkUserIdentifierNewUsers,
+      Service2.checkUserIdentifierReturningUsers,
+    )
+
+  setup(
+    "check-user-identifier-service3",
+    "Check if a user is on or can be added to the allow list"
+  )
+    .withActions(feed(identifierFeeder).actionBuilders: _*)
+    .withRequests(
+      Service3.checkUserIdentifierNewUsers,
+      Service3.checkUserIdentifierReturningUsers,
+    )
+
+  setup(
+    "check-user-identifier-service4",
+    "Check if a user is on or can be added to the allow list"
+  )
+    .withActions(feed(identifierFeeder).actionBuilders: _*)
+    .withRequests(
+      Service4.checkUserIdentifierNewUsers,
+      Service4.checkUserIdentifierReturningUsers,
+    )
+
+  setup(
+    "check-user-identifier-service5",
+    "Check if a user is on or can be added to the allow list"
+  )
+    .withActions(feed(identifierFeeder).actionBuilders: _*)
+    .withRequests(
+      Service5.checkUserIdentifierNewUsers,
+      Service5.checkUserIdentifierReturningUsers,
     )
 
   runSimulation()

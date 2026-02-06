@@ -26,18 +26,26 @@ object CheckRequests extends ServicesConfiguration {
   val baseUrl: String = baseUrlFor("rate-limited-allow-list")
   val route: String   = "/rate-limited-allow-list"
 
-  val checkUserIdentifierNewUsers: HttpRequestBuilder =
-    http("Navigate to Home Page")
-      .post(s"$baseUrl$route/services/rate-limited-allow-list-performance-tests/features/performance-tests")
-      .asJson
-      .body(StringBody("""{ "identifier": "#{randomIdentifier}" } """))
-      .check(status.is(200))
+  abstract class CheckRequest(service: String, feature: String) {
+    val checkUserIdentifierNewUsers: HttpRequestBuilder =
+      http("Navigate to Home Page")
+        .post(s"$baseUrl$route/services/$service/features/$feature")
+        .asJson
+        .body(StringBody("""{ "identifier": "#{randomIdentifier}" } """))
+        .check(status.is(200))
 
-  val checkUserIdentifierReturningUsers: HttpRequestBuilder =
-    http("Navigate to Home Page")
-      .post(s"$baseUrl$route/services/rate-limited-allow-list-performance-tests/features/performance-tests")
-      .asJson
-      .body(StringBody("""{ "identifier": "#{repeatIdentifier}" } """))
-      .check(status.is(200))
+    val checkUserIdentifierReturningUsers: HttpRequestBuilder =
+      http("Navigate to Home Page")
+        .post(s"$baseUrl$route/services/$service/features/$feature")
+        .asJson
+        .body(StringBody("""{ "identifier": "#{repeatIdentifier}" } """))
+        .check(status.is(200))
+  }
+
+  object Service1 extends CheckRequest("service1", "feature1")
+  object Service2 extends CheckRequest("service2", "feature2")
+  object Service3 extends CheckRequest("service3", "feature3")
+  object Service4 extends CheckRequest("service4", "feature4")
+  object Service5 extends CheckRequest("service5", "feature5")
 
 }
